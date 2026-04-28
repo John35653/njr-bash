@@ -1,0 +1,254 @@
+GOING TO RERUN ALL OF THESE TOMORROW JUST TO DOUBLE CHECK THAT EVERYTHING IS DONE
+
+1. Overview
+
+ - In this project, you will build a mini shell in C that can run common Linux programs such as ls, cat, grep, wc, sort, and echo. 
+ - Your shell will create child processes with fork(), run programs with an exec family function, support input/output redirection, 
+ - connect programs with pipes, and handle common terminal signals such as Ctrl+C.
+ 
+ - This project is designed to help you understand how real shells work at a practical level. By the end, you should be able to 
+ - explain how the OS launches programs, how standard input/output/error are redirected, how pipes connect processes, and how signals 
+ - interact with foreground programs.
+  
+ - Your shell does not need to be as full-featured as Bash. The goal is a clean, correct, and understandable implementation of core Unix shell behavior.
+
+2. Required Features
+
+    A. Interactive prompt
+    Your shell must repeatedly:
+
+        DONE - display a prompt such as mini-shell>
+        DONE - read one line of input
+        DONE - execute the command
+        DONE - continue until the user exits
+        DONE - The shell should ignore empty lines.
+
+    B. Run external Linux programs
+    Your shell must be able to run common Linux commands such as:
+
+        DONE - ls
+        DONE - pwd
+        DONE - cat file.txt
+        DONE - grep hello file.txt
+        DONE - wc -l file.txt
+        DONE - sort
+        DONE - echo hello world
+        - Use:
+
+        fork() to create a child
+        an exec function to run the program in the child
+        waitpid() in the parent for foreground execution
+        Using execvp() is appropriate because it searches PATH.
+
+    C. Built-in commands
+    Your shell must support at least these built-ins:
+
+        DONE - cd <dir>
+        DONE - exit
+        - Why these are built-ins:
+
+        cd must change the shell’s own working directory, so it cannot run only in a child
+        exit must terminate the shell itself
+
+        You may also add:
+
+        DONE - pwd
+        DONE - help
+        DONE - but only cd and exit are required.
+
+    D. Input/output/error redirection
+    Your shell must support these redirections:
+
+        - < file for stdin
+        - > file for stdout
+        - 2> file for stderr
+
+        Examples:
+
+        - cat < input.txt
+        - ls > out.txt
+        - grep hello missing.txt 2> err.txt
+        - sort < in.txt > out.txt
+
+        Requirements:
+
+        * use open() and dup2()
+        * create output files when needed
+        * truncate output files for > redirection
+        * report errors when files cannot be opened
+
+    E. Pipes
+    Your shell must support pipe | between commands.
+
+        Examples:
+
+        - cat file.txt | wc -l
+        - ls | sort
+        - cat file.txt | grep hello | wc -l
+        - Requirements:
+
+        * support pipelines of at least 3 commands, not just one pipe
+        * use pipe(), fork(), dup2(), and close() correctly
+        * wait for all children in the pipeline
+
+    F. Signal handling
+    Your shell must handle Ctrl+C reasonably.
+
+        Expected behavior:
+
+        DONE * when the shell is waiting for input, pressing Ctrl+C should not kill the shell
+        DONE * when a foreground child process is running, Ctrl+C should terminate the child process in the normal way
+
+        A common design is:
+
+        DONE * the shell process ignores or handles SIGINT
+        DONE * child processes restore default SIGINT behavior before exec
+        DPME * You do not need to implement full Unix job control.
+
+    G. Basic syntax error handling
+    Your shell should detect and report simple invalid input instead of crashing.
+
+        Examples of errors:
+
+        - missing filename after <, >, or 2>
+        - pipe at beginning or end, such as | ls or ls |
+        - repeated malformed operators such as ls >
+        - You do not need to match Bash’s exact error messages, but your shell should print a clear error and continue running.
+
+3. Minimum Parsing Expectations
+Your shell should correctly handle:
+
+    DONE - tokens separated by spaces
+    DONE - command arguments
+    - <, >, 2>, and |
+    - combinations like:
+    - grep hello < input.txt | wc -l > out.txt
+
+    For this project, you may assume:
+
+    DONE * input lines are at most a fixed length, such as 1024 characters
+    DONE * tokens are separated by spaces
+    * special operators <, >, 2>, | are surrounded by spaces
+    
+    * That means this is valid:
+    - ls | wc -l
+
+    * but you do not have to support:
+    - ls|wc -l
+
+You also do not have to fully support quoted strings.
+
+This simplification keeps the focus on processes, exec, redirection, pipes, and signals, not on complicated string parsing.
+
+4. Required System Calls / Library Functions
+Your project should use many of the following:
+
+    DONE - fork()
+    DONE - execvp() or another appropriate exec function
+    DONE - waitpid()
+    DONE - open()
+    DONE - close()
+    DONE - dup2()
+    DONE - pipe()
+    DONE - chdir()
+    DONE - signal() or sigaction()
+    DONE - perror()
+    - malloc() / free() if needed
+    DONE - string functions such as strcmp(), strtok(), etc.
+    DONE * If you use system(), that defeats the purpose of the project and is not allowed.
+
+5. Example Interactions
+    
+    DONE - Example 1: simple command
+    DONE - mini-shell> ls
+    DONE - file1.txt  file2.txt  main.c
+
+    DONE - Example 2: built-in
+    DONE - mini-shell> cd ..
+    DONE - mini-shell> pwd
+    DONE - /home/student
+
+    DONE - Example 3: output redirection
+    DONE - mini-shell> ls > out.txt
+    DONE - mini-shell> cat out.txt
+    DONE - file1.txt
+    DONE - file2.txt
+    DONE - main.c
+
+    DONE - Example 4: stderr redirection
+    DONE - mini-shell> ls missingfile 2> err.txt
+    DONE - mini-shell> cat err.txt
+    DONE - ls: cannot access 'missingfile': No such file or directory
+
+    DONE - Example 5: pipe
+    DONE - mini-shell> cat words.txt | sort | wc -l
+    DONE - 12
+
+    DONE - Example 6: Ctrl+C
+    DONE - mini-shell> sleep 10
+    DONE - ^C
+    DONE - mini-shell>
+    DONE - The shell should survive, and control should return to the prompt.
+
+6. Testing Requirements
+You must demonstrate that your shell works on a Linux system.
+
+                * At minimum, test all of the following:
+                
+                  Simple execution
+                DONE * pwd
+                DONE * ls
+                DONE * echo hello
+                * Built-ins
+                DONE * cd ..
+                DONE * cd /tmp
+                DONE * exit
+                                            hello
+                
+                  Redirection
+                DONE * cat < input.txt
+                DONE * ls > out.txt
+                DONE * grep hello missing.txt 2> err.txt
+                DONE * sort < input.txt > sorted.txt
+                
+                  Pipes
+                DONE * cat input.txt | wc -l
+                DONE * ls | sort
+                DONE * cat input.txt | grep hello | wc -l
+                
+                  Mixed features
+                DONE * grep hello < input.txt | wc -l > count.txt
+                DONE * Signal behavior
+                DONE * sleep 10
+                DONE * Then press Ctrl+C.
+
+                  Syntax errors
+                DONE * ls |
+                DONE * > out.txt
+                DONE * cat <
+                ** Your program should not crash.
+
+7. Deliverables
+
+        Submit a zipped file that includes the following:
+
+        ** Source Code
+        ** all .c and .h files
+        ** README.txt
+        ** Must include:
+        ** how to compile
+        ** how to run
+
+8. Grading Rubric
+A sample rubric:
+
+    External command execution: 20%
+    Built-ins (cd, exit): 10%
+    Redirection (<, >, 2>): 20%
+    Pipes (|): 20%
+    Signal handling (Ctrl+C): 10%
+    Error handling and robustness: 10%
+    valgrind --leak-check shows 0 memory leaks: 10%
+    You can adjust the percentages for your class.
+
+Due on May 3, 2026 11:59 PM
