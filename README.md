@@ -1,5 +1,5 @@
 # README
-
+This is a bash program for Linux.
 ## How to compile: 
 Type `make` in the command line and hit enter. It will compile the program<br>
 with the included Makefile and name it __njr-bash__. Otherwise just use regular<br> 
