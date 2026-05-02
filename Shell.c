@@ -7,7 +7,7 @@
 #include <sys/types.h> // for pid_t with use of getpid(), only useful when coding on Windows
 #include <unistd.h> // for things like getpid(), pid_t, chdir when on linux, although I had to include <sys/types.h> in the func.c file since the editor was not recognizing <unistd.h>
 #include <sys/wait.h> // used for wait and waitpid
-#include "func.h" // this is where all of the function prototypes go. for now i will keep them in the main file but before i turn them in i will remove them and this comment
+#include "func.h" // this is where all of the function prototypes go. 
 
 
 // Globals
