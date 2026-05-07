@@ -69,3 +69,17 @@ Thank you for using njr-bash!<br>
 ==7538== LL refs:         3,612  ( 3,139 rd   +    473 wr)<br>
 ==7538== LL misses:       3,238  ( 2,837 rd   +    401 wr)<br>
 ==7538== LL miss rate:      0.7% (   0.6%     +    1.0%  )<br>
+
+When valgrind --leak-check=full ./njr-bash was run to check<br>
+both the built-ins and linux commands for memory leaks, <br>
+none were found. Here are the results:<br><br>
+Thank you for using njr-bash!<br>
+==27723== <br>
+==27723== HEAP SUMMARY:<br>
+==27723==     in use at exit: 0 bytes in 0 blocks<br>
+==27723==   total heap usage: 2 allocs, 2 frees, 2,048 bytes allocated<br>
+==27723== <br>
+==27723== All heap blocks were freed -- no leaks are possible<br>
+==27723== <br>
+==27723== Use --track-origins=yes to see where uninitialised values come from<br>
+==27723== For lists of detected and suppressed errors, rerun with: -s<br>
