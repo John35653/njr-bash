@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include <sys/types.h> // for some reason pid_t was not resolving so had to use this to get the compiler to quit complaining
+#include <sys/types.h> // pid_t was not resolving so had to use this to get the compiler to quit complaining
 
 extern char cwd[1024]; // had to do this so the compiler knows that there is an array of this type and doesn't throw a fit when make is ran
 
